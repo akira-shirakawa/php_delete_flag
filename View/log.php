@@ -31,7 +31,7 @@ $message = $log->getMessage();
         <tr><th>ID</th><th>処理</th><th>修正前</th><th>修正後</th><th>修正日時</th></tr>
         <?php foreach($message as $value): ?>
             <tr class="<?php echo $value['statue']?>">
-                <td><?php echo $value['id'] ?></td>
+                <td><?php echo $value['comment_id'] ?></td>
                 <td><?php echo $value['statue'] ?></td>
             <?php if($value['statue'] == 'deleted') :?>
                 <td><?php echo  $log->getDataNext($value['comment_id'],'comment_id')[0]['comment']?></td>
