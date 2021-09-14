@@ -32,7 +32,7 @@
     right:0;
 }
 td, th {
-    height: 50px;
+    
     vertical-align: middle;
 }
 
@@ -45,4 +45,13 @@ td, th {
     .columns{
         margin: 0 10px 0 10px;
     }
+}
+.deleted{
+    background-color: red;
+}
+.updated{
+    background: blue;
+}
+.created{
+    background: chartreuse;
 }

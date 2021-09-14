@@ -2,6 +2,7 @@
 ini_set('display_errors', 1);
 require_once '../Class/Dbc.php';
 $comment = new Db('comments');
+$log = new Db('log');
 $id = $_GET['id'] ?? null;
 $data=$comment->getPagenate($id)[0];
 $all_page = $comment->getPagenate($id)[1];
@@ -76,7 +77,7 @@ if($message){
         <?php foreach($search_result ?? $data as $value): ?>
             <tr>
             <td><?php echo $value['id'] ?></td> 
-            <td><?php echo $value['comment'] ?></td>
+            <td><?php echo $log->getDataNew($value['id'],'comment_id')[0]['comment'] ?? $value['comment'] ?></td>
             <td><button class="<?php echo $value['id'] ?> button is-info js-edit-button">編集</button><button class="<?php echo $value['id'] ?> button is-danger js-delete-button">消去</button></td>
             </tr>
         <?php endforeach; ?>

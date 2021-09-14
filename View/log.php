@@ -1,8 +1,8 @@
 <?php
 ini_set('display_errors', 1);
 require_once '../Class/Dbc.php';
-$comment = new Db('comments');
-$message = $comment->getLog();
+$log = new Db('log');
+$message = $log->getMessage();
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -30,8 +30,20 @@ $message = $comment->getLog();
     <table class="table is-fullwidth">
         <tr><th>ID</th><th>処理</th><th>修正前</th><th>修正後</th><th>修正日時</th></tr>
         <?php foreach($message as $value): ?>
-            <tr>
-           <?php echo $value ?>
+            <tr class="<?php echo $value['statue']?>">
+                <td><?php echo $value['id'] ?></td>
+                <td><?php echo $value['statue'] ?></td>
+            <?php if($value['statue'] == 'deleted') :?>
+                <td><?php echo  $log->getDataNext($value['comment_id'],'comment_id')[0]['comment']?></td>
+            <?php else : ?>
+                <td><?php echo $value['comment_old'] ?></td>
+            <?php endif; ?>
+            <?php if($value['statue'] != 'deleted') :?>   
+                <td><?php echo $value['comment']?></td>
+            <?php else:?>
+                <td></td>
+            <?php endif;?>
+                <td><?php echo $value['created_at'] ?></td>
             </tr>
         <?php endforeach; ?>
     </table>

@@ -28,28 +28,7 @@ Class Db{
         $result = $stmt->fetchall(PDO::FETCH_ASSOC);
         return $result;
     }
-    public function getLog(){
-        $sql = "select * from ".$this->table_name;
-        $stmt = $this->dbc()->query($sql);
-        $result = $stmt->fetchall(PDO::FETCH_ASSOC);
-        $str_result =[];
-        foreach($result as $value){
-            $id = $value['id'];
-            $comment = $value['comment'];
-            $comment_old = $value['comment_old'];
-            $update = $value['created_at'];
-            if($value['delete_flag'] == 1){
-                $str_result[]= "<tr class='has-background-danger'><td>$id</td><td>削除</td><td>$comment_old</td><td>$comment</td><td>$update</td></tr>";
-            }elseif($value['delete_flag'] == 0 && $comment_old){
-                $str_result[]  = "<tr class='has-background-link'><td>$id</td><td>更新</td><td>$comment_old</td><td>$comment</td><td>$update</td></tr>";
-
-            }else{
-                $str_result[] = "<tr class='has-background-primary'><td>$id</td><td>新規作成</td><td>$comment_old</td><td>$comment</td><td>$update</td></tr>";
-
-            }
-        }
-       return $str_result;
-    }
+   
     public function getPagenate($id){
        
         $id = $id ?? 1;  
@@ -70,9 +49,10 @@ Class Db{
         
     }
     public function search($search){
-        $sql = "select * from ".$this->table_name." where comment like '%$search%'";
+        $sql = "select * from log where (comment_id,created_at)  in (select comment_id, max(created_at) from log group by comment_id) and comment like '%$search%'";
         $stmt = $this->dbc()->query($sql);            
-        return $search_result = $stmt->fetchall(PDO::FETCH_ASSOC);
+        $search_result = $stmt->fetchall(PDO::FETCH_ASSOC);
+        return $search_result;
     }
     public function show($id){
         $sql = "select * from ".$this->table_name." where id=?";
@@ -90,6 +70,20 @@ Class Db{
         $stmt->execute([$id]);
         $result = $stmt->fetchall(PDO::FETCH_ASSOC);
         return $result;    
+   }
+   public function getDataNew($id,$column){
+        $sql = "select * from ".$this->table_name." where $column =? order by id desc limit 1"; 
+        $stmt = $this->dbc()->prepare($sql);
+        $stmt->execute([$id]);
+        $result = $stmt->fetchall(PDO::FETCH_ASSOC);
+        return $result;   
+   }
+   public function getDataNext($id,$column){
+        $sql = "select * from ".$this->table_name." where $column =? order by id  desc limit 1,1"; 
+        $stmt = $this->dbc()->prepare($sql);
+        $stmt->execute([$id]);
+        $result = $stmt->fetchall(PDO::FETCH_ASSOC);
+        return $result;   
    }
     public function create($array){
         $colum_name ='(';
