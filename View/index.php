@@ -4,8 +4,9 @@ require_once '../Class/Dbc.php';
 $comment = new Db('comments');
 $log = new Db('log');
 $id = $_GET['id'] ?? null;
-$data=$comment->getPagenate($id)[0];
-$all_page = $comment->getPagenate($id)[1];
+$datas = $comment->getPagenate($id);
+$data=$datas[0];
+$all_page = $datas[1];
 $message = $_GET['message'] ?? null;
 if($message){
     $search_result = $comment->search($message);
@@ -39,6 +40,7 @@ if($message){
         <p>コメントを追加</p>
             <input type="text" name="comment" id="" class="input">
             <input type="submit" value="送信" class="button">
+            <input type="hidden" name="data_type" value="create">
         </form>
     </div>
   </div>
@@ -49,12 +51,13 @@ if($message){
   <div class="modal-background"></div>
   <div class="modal-content">
     <div class="box">
-        <form action="../Main/edit_comment.php" method="post" id="js-edit-form-target">
+        <form action="../Main/create_comment.php" method="post" id="js-edit-form-target">
         <p>コメントを編集</p>
             <input type="text" name="comment" id="js-edit-target" class="input" value="">
             <input type="hidden" name="comment_id" id="js-edit-target-hidden" value="">
             <input type="hidden" name="comment_old" id="js-edit-target-old" value="">
             <input type="submit" value="送信" class="button">
+            <input type="hidden" name="data_type" value="edit">
         </form>
     </div>
   </div>
@@ -78,7 +81,7 @@ if($message){
             <tr>
             <td><?php echo $value['id'] ?></td> 
             <td><?php echo $log->getDataNew($value['id'],'comment_id')[0]['comment'] ?? $value['comment'] ?></td>
-            <td><button class="<?php echo $value['id'] ?> button is-info js-edit-button">編集</button><button class="<?php echo $value['id'] ?> button is-danger js-delete-button">消去</button></td>
+            <td><button class="<?php echo $value['id'] ?> button is-info is-small js-edit-button">編集</button><button class="<?php echo $value['id'] ?> button is-small is-danger js-delete-button">消去</button></td>
             </tr>
         <?php endforeach; ?>
     </table>
@@ -90,8 +93,9 @@ if($message){
     </div>
     <div class="column"></div>
 </div>
-<form action="../Main/delete_comment.php" method="post" id="js-delete-form-target">
+<form action="../Main/create_comment.php" method="post" id="js-delete-form-target">
 <input type="hidden" name="comment_id" id="js-delete-target">
+<input type="hidden" name="data_type" value="delete">
 </form>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript" src="main.js"></script>  
