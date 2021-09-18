@@ -54,6 +54,15 @@ Class Db{
         $search_result = $stmt->fetchall(PDO::FETCH_ASSOC);
         return $search_result;
     }
+    public function select($str){
+        $str = $str ?? '';
+        $sql = "select * from ".$this->table_name." where statue=?";
+        $stmt = $this->dbc()->prepare($sql);
+        $stmt->execute([$str]);
+        $result = $stmt->fetchall(PDO::FETCH_ASSOC);
+        
+        return $result;
+    }
     public function show($id){
         $sql = "select * from ".$this->table_name." where id=?";
         $arr=[];
@@ -61,6 +70,7 @@ Class Db{
         $stmt = $this->dbc()->prepare($sql);
         $stmt->execute($arr);   
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
         return $result;
     
     }

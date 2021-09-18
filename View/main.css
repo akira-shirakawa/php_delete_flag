@@ -47,11 +47,11 @@ td, th {
     }
 }
 .deleted{
-    background-color: red;
+    background-color: rgb(255, 169, 169);
 }
 .updated{
-    background: blue;
+    background: rgb(185, 185, 255);
 }
 .created{
-    background: chartreuse;
+    background: rgb(169, 231, 184);
 }
