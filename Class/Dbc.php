@@ -54,13 +54,18 @@ Class Db{
         $search_result = $stmt->fetchall(PDO::FETCH_ASSOC);
         return $search_result;
     }
-    public function select($str){
-        $str = $str ?? '';
-        $sql = "select * from ".$this->table_name." where statue=?";
-        $stmt = $this->dbc()->prepare($sql);
-        $stmt->execute([$str]);
+    public function select($str,$message_id){  
+       
+        if($str == 'all'){
+            $sql = "select * from ".$this->table_name." where comment_id = ?";
+            $stmt = $this->dbc()->prepare($sql);
+            $stmt->execute([$message_id]);
+        }else{
+            $sql = "select * from ".$this->table_name." where comment_id = ? and statue = ?";
+            $stmt = $this->dbc()->prepare($sql);
+            $stmt->execute([$message_id,$str]);
+        }      
         $result = $stmt->fetchall(PDO::FETCH_ASSOC);
-        
         return $result;
     }
     public function show($id){
