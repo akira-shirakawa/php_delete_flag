@@ -1,6 +1,7 @@
 <?php
 ini_set('display_errors', 1);
 require_once '../Class/Dbc.php';
+session_start();
 $log = new Db('log');
 $main = new Db('comments');
 $main_message = $main->getMessage();
@@ -8,6 +9,9 @@ $message = $log->getMessage();
 $get_message = $_GET['message'] ?? null;
 $message_id = $_GET['message_id'] ?? null;
 if($get_message){
+    $_SESSION['statue'] = $get_message;
+    $_SESSION['main_id'] = $message_id;
+    $js = json_encode($_SESSION);
     $search_result = $log->select($get_message,$message_id);
 }
 ?>
@@ -21,6 +25,7 @@ if($get_message){
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css" />
     <link rel="stylesheet" href="main.css">
     <title>Document</title>
+  
 </head> 
 <body>
 <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
@@ -34,13 +39,13 @@ if($get_message){
     <div class="column"></div>
     <div class="column is-half">
         <form action="" method="get">
-            <select name="message" class="select">
+            <select name="message" class="select" id ="js-target">
                 <option value="all">全て</option>
                 <option value="created">追加のみ</option>
                 <option value="updated">更新のみ</option>
                 <option value="deleted">削除のみ</option>
             </select>
-            <select name="message_id" class="select">
+            <select name="message_id" class="select" id ="js-target2">
                 <?php foreach($main_message as $value): ?>
                     <option value="<?php echo $value['id']?>"><?php echo $value['id']?></option>
                 <?php endforeach; ?>
@@ -80,5 +85,11 @@ if($get_message){
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript" src="main.js"></script>  
+<script>
+        session = JSON.parse('<?php echo $js; ?>');
+        $('#js-target').val(session.statue);
+        $('#js-target2').val(session.main_id);
+       
+</script>
 </body>
 </html>
